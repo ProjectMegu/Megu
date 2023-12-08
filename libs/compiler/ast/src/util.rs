@@ -1,5 +1,4 @@
-#[derive(Debug, Clone, PartialEq)]
-pub enum AstType {
-    Value(Vec<String>),
-    Unknown,
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct  AstType {
+    pub refs: Vec<String>,
 }
