@@ -1,0 +1,23 @@
+{
+    "name": "Rust Dev",
+    "service": "env",
+    "dockerComposeFile": "../docker-compose.yml",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "[rust]": {
+                    "editor.formatOnSave": true
+                },
+                "rust-analyzer.checkOnSave": true,
+                "rust-analyzer.check.command": "clippy"
+            },
+            "extensions": [
+                "rust-lang.rust-analyzer",
+				"vadimcn.vscode-lldb",
+				"tamasfe.even-better-toml",
+				"serayuzgur.crates"
+            ]
+        }
+    }
+}

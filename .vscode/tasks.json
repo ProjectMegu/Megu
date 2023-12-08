@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "run debug_util",
+			"type": "shell",
+			"command": "cd ${workspaceFolder} && cargo run -- ${file}",
+			"problemMatcher": [
+				"$rust-panic"
+			]
+		}
+	]
+}

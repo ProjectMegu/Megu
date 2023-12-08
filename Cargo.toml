@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "debug_util/cmd", # debuger
+    "libs/compiler/*",
+]
+
+[workspace.dependencies]
+anyhow = "1"

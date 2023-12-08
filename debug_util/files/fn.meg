@@ -1,0 +1,2 @@
+fn test(a: Int, b: Native.LLVM.String)
+// aaaaaaaaaaaaaaaaaaa
