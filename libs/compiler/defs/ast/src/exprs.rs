@@ -1,6 +1,6 @@
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum AstExpr {
-    CallFunc(CallFunc)
+    CallFunc(CallFunc),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

@@ -8,7 +8,7 @@ pub use megu_parser::megu_parse;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct UseTree {
     name: Vec<String>,
-    list: Vec<UseTree>
+    list: Vec<UseTree>,
 }
 
 impl UseTree {
@@ -21,7 +21,7 @@ impl UseTree {
                 let items = i.into_use();
                 for item in items {
                     list.push([self.name.clone(), item].concat())
-                };
+                }
             }
             list
         }
@@ -86,7 +86,7 @@ peg::parser! {
             / block_nspace:p_block_namespace() { return AstDef::NSpace(block_nspace); }
             / line_nspace:p_line_namespace() { return AstDef::LineNSpace(line_nspace); }
             / use_:p_use() { return AstDef::Use(use_); }
-            
+
 
         // funcs
         /// fn
@@ -143,7 +143,7 @@ peg::parser! {
                     tree,
                 }
             }
-        
+
         /// Block namespace
         pub(super) rule p_block_namespace() -> AstBlockNamespace =
             t_nspace() n() tree:p_namespace_tree() n() t_lbrack() n() inner:(p_def() ** mn()) n() t_rbrack() {
@@ -152,7 +152,7 @@ peg::parser! {
                     inner,
                 }
             }
-        
+
         // use
         /// use
         pub(super) rule p_use() -> AstUse =
@@ -167,7 +167,7 @@ peg::parser! {
                 }
                 list
             }
-        
+
         pub(super) rule p_use_tree() -> UseTree =
             name:ref_dot() n() lists:(t_dot() n() t_lbrack() n() list:(p_use_tree() ** (n() t_comma() n()) ) t_comma()? n() t_rbrack() { list })? {
                 UseTree {

@@ -38,7 +38,7 @@ pub enum MeguToken<'a> {
     Dot,
     #[token(",")]
     Comma,
-    
+
     // whites
     #[regex(r"[ \t]*", logos::skip)]
     WhiteSpace,

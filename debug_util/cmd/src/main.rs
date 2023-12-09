@@ -1,10 +1,10 @@
-use std::{path::PathBuf, fs::File, io::Read};
 use clap::Parser;
 use parser::parse;
+use std::{fs::File, io::Read, path::PathBuf};
 
-#[derive(Debug,Parser)]
+#[derive(Debug, Parser)]
 struct Cmd {
-   path: PathBuf
+    path: PathBuf,
 }
 
 fn main() {

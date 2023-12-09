@@ -15,7 +15,7 @@ pub struct AstDefFunc {
     pub name: String,
     pub args: Vec<AstDefFuncArg>,
     pub ret: Option<AstType>,
-    pub inner: Vec<AstStmt>
+    pub inner: Vec<AstStmt>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -40,7 +40,7 @@ pub struct AstLineNamespace {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AstBlockNamespace {
     pub tree: AstNameSpaceTree,
-    pub inner: Vec<AstDef>
+    pub inner: Vec<AstDef>,
 }
 
 // use
