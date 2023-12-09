@@ -4,7 +4,7 @@
 		{
 			"label": "run debug_util",
 			"type": "shell",
-			"command": "cd ${workspaceFolder} && cargo run -- ${file}",
+			"command": "cd ${workspaceFolder} && cargo run --bin cmd -- ${file}",
 			"problemMatcher": [
 				"$rust-panic"
 			]
