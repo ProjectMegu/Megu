@@ -126,10 +126,6 @@ peg::parser! {
                 }
             }
 
-        
-
-        
-
         /// stmt
         pub(super) rule p_stmt() -> AstStmt =
             expr:p_expr() { AstStmt::Expr(expr) }
@@ -300,6 +296,66 @@ mod tests {
                     })],
                 })),
             ];
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+    }
+
+    mod nspace {
+        use super::*;
+
+        /// Test case for parsing a line namespace.
+        #[test]
+        fn p_line_namespace_test() {
+            // Input string representing a line namespace
+            let input = r#"nspace .test"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the line namespace and get the result
+            let result = megu_parser::p_line_namespace(&tokens);
+
+            // Expected AST representation of the line namespace
+            let expect = ast::AstLineNamespace {
+                tree: ast::AstNameSpaceTree {
+                    name: vec!["test".to_string()],
+                    relative: true,
+                },
+            };
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+
+        /// Test case for parsing a block namespace.
+        #[test]
+        fn p_block_namespace_test() {
+            // Input string representing a block namespace
+            let input = r#"nspace .test [
+                fn test() []
+            ]"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the block namespace and get the result
+            let result = megu_parser::p_block_namespace(&tokens);
+
+            // Expected AST representation of the block namespace
+            let expect = ast::AstBlockNamespace {
+                tree: ast::AstNameSpaceTree {
+                    name: vec!["test".to_string()],
+                    relative: true,
+                },
+                inner: vec![ast::AstDef::Func(ast::AstDefFunc {
+                    name: "test".to_string(),
+                    args: vec![],
+                    ret: None,
+                    inner: vec![],
+                })],
+            };
 
             // Assert that the result matches the expected AST
             assert_eq!(result, Ok(expect));

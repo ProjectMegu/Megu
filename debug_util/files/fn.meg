@@ -2,6 +2,8 @@
 nspace Test
 
 nspace .Test.Test2 [
-    fn a() []
+    fn a() [
+        test()
+    ]
 ] 
 nspace Test
