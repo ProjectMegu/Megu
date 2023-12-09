@@ -3,7 +3,11 @@ use crate::*;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum AstDef {
     Func(AstDefFunc),
+    NSpace(AstBlockNamespace),
+    LineNSpace(AstLineNamespace),
 }
+
+// DefFunc
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AstDefFunc {
@@ -19,4 +23,21 @@ pub struct AstDefFuncArg {
     pub arg_type: AstType,
 }
 
+// namespaces
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AstNameSpaceTree {
+    pub name: Vec<String>,
+    pub relative: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AstLineNamespace {
+    pub tree: AstNameSpaceTree,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AstBlockNamespace {
+    pub tree: AstNameSpaceTree,
+    pub inner: Vec<AstDef>
+}

@@ -1,2 +1,7 @@
-fn test(a: Int, b: Native.LLVM.String)
-// aaaaaaaaaaaaaaaaaaa
+
+nspace Test
+
+nspace .Test.Test2 [
+    fn a() []
+] 
+nspace Test
