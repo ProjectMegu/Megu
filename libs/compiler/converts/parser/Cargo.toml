@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 # internal dependencies
-ast = { path = "../ast" }
+ast = { path = "../../defs/ast" }
 
 # external dependencies
 peg = {version = "0", features = ["trace"]}

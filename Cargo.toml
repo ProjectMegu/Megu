@@ -1,7 +1,8 @@
 [workspace]
 members = [
     "debug_util/cmd", # debuger
-    "libs/compiler/*",
+    "libs/compiler/defs/*",
+    "libs/compiler/converts/*",
 ]
 
 [workspace.dependencies]
