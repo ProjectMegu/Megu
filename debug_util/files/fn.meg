@@ -1,9 +1,1 @@
-
-nspace Test
-
-nspace .Test.Test2 [
-    fn a() [
-        test()
-    ]
-] 
-nspace Test
+use .test.[test1,test2,test3]

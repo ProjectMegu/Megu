@@ -10,6 +10,6 @@ edition = "2021"
 ast = { path = "../ast" }
 
 # external dependencies
-peg = "0.8.2"
+peg = {version = "0", features = ["trace"]}
 logos = "0.13.0"
 anyhow.workspace = true

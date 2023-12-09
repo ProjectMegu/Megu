@@ -68,7 +68,7 @@ peg::parser! {
         rule n() -> () = mn()? {}
         /// dot ref
         rule ref_dot() -> Vec<String> =
-            name:(t_ident() ** (n() t_dot() n())) {
+            name:(t_ident() ++ (n() t_dot() n())) {
                 name
             }
 
@@ -169,7 +169,7 @@ peg::parser! {
             }
         
         pub(super) rule p_use_tree() -> UseTree =
-            name:ref_dot() n() lists:(t_dot() n() t_lbrack() n() list:(p_use_tree() ** (n() t_comma() n()) ) n() t_rbrack() { list })? {
+            name:ref_dot() n() lists:(t_dot() n() t_lbrack() n() list:(p_use_tree() ** (n() t_comma() n()) ) t_comma()? n() t_rbrack() { list })? {
                 UseTree {
                     name,
                     list: lists.unwrap_or(vec![]),
@@ -407,6 +407,68 @@ mod tests {
                     inner: vec![],
                 })],
             };
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+    }
+
+    mod use_ {
+        use super::*;
+
+        /// Test case for parsing a use statement.
+        #[test]
+        fn p_use_test() {
+            // Input string representing a use statement
+            let input = r#"use .test"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the use statement and get the result
+            let result = megu_parser::p_use(&tokens);
+
+            // Expected AST representation of the use statement
+            let expect = vec![ast::AstNameSpaceTree {
+                name: vec!["test".to_string()],
+                relative: true,
+            }];
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+
+        /// Test case for parsing a use statement with a list.
+        #[test]
+        fn p_use_list_test() {
+            // Input string representing a use statement with a list
+            let input = r#"use .test.[
+                test1,
+                test2,
+                test3,
+            ]"#;
+
+            // Tokenize the input string
+            let tokens = dbg!(tokens::lexer(input));
+
+            // Parse the use statement and get the result
+            let result = megu_parser::p_use(&tokens);
+
+            // Expected AST representation of the use statement
+            let expect = vec![
+                ast::AstNameSpaceTree {
+                    name: vec!["test".to_string(), "test1".to_string()],
+                    relative: true,
+                },
+                ast::AstNameSpaceTree {
+                    name: vec!["test".to_string(), "test2".to_string()],
+                    relative: true,
+                },
+                ast::AstNameSpaceTree {
+                    name: vec!["test".to_string(), "test3".to_string()],
+                    relative: true,
+                },
+            ];
 
             // Assert that the result matches the expected AST
             assert_eq!(result, Ok(expect));
