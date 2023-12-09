@@ -5,6 +5,7 @@ pub enum AstDef {
     Func(AstDefFunc),
     NSpace(AstBlockNamespace),
     LineNSpace(AstLineNamespace),
+    Use(AstUse),
 }
 
 // DefFunc
@@ -41,3 +42,7 @@ pub struct AstBlockNamespace {
     pub tree: AstNameSpaceTree,
     pub inner: Vec<AstDef>
 }
+
+// use
+
+pub type AstUse = Vec<AstNameSpaceTree>;

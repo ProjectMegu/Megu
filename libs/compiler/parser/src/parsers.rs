@@ -3,6 +3,31 @@ use ast::*;
 
 pub use megu_parser::megu_parse;
 
+// parser utils
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct UseTree {
+    name: Vec<String>,
+    list: Vec<UseTree>
+}
+
+impl UseTree {
+    fn into_use(self) -> Vec<Vec<String>> {
+        if self.list.is_empty() {
+            vec![self.name]
+        } else {
+            let mut list = vec![];
+            for i in self.list {
+                let items = i.into_use();
+                for item in items {
+                    list.push([self.name.clone(), item].concat())
+                };
+            }
+            list
+        }
+    }
+}
+
 peg::parser! {
     grammar megu_parser<'a>() for [MeguToken<'a>] {
         // entry point
@@ -15,6 +40,7 @@ peg::parser! {
         // keyword
         rule t_fn() -> () = [MeguToken::DefFN] {}
         rule t_nspace() -> () = [MeguToken::DefNSpace] {}
+        rule t_use() -> () = [MeguToken::DefUse] {}
 
         // regexs
         rule t_ident() -> String = [MeguToken::Ident(s)] { s.to_string() }
@@ -40,15 +66,15 @@ peg::parser! {
 
         /// optional newline
         rule n() -> () = mn()? {}
-        /// coron ref
-        rule ref_coron() -> Vec<String> =
+        /// dot ref
+        rule ref_dot() -> Vec<String> =
             name:(t_ident() ** (n() t_dot() n())) {
                 name
             }
 
         /// type
         pub(super) rule p_type() -> AstType =
-            r:ref_coron() {
+            r:ref_dot() {
                 AstType {
                     refs: r
                 }
@@ -59,6 +85,7 @@ peg::parser! {
             func:p_func() { return AstDef::Func(func); }
             / block_nspace:p_block_namespace() { return AstDef::NSpace(block_nspace); }
             / line_nspace:p_line_namespace() { return AstDef::LineNSpace(line_nspace); }
+            / use_:p_use() { return AstDef::Use(use_); }
             
 
         // funcs
@@ -125,6 +152,30 @@ peg::parser! {
                     inner,
                 }
             }
+        
+        // use
+        /// use
+        pub(super) rule p_use() -> AstUse =
+            t_use() n() relative: t_dot()? n() tree:p_use_tree() {
+                let mut list = Vec::new();
+                let a = tree.into_use();
+                for i in a {
+                    list.push(AstNameSpaceTree {
+                        name: i,
+                        relative: relative.is_some(),
+                    })
+                }
+                list
+            }
+        
+        pub(super) rule p_use_tree() -> UseTree =
+            name:ref_dot() n() lists:(t_dot() n() t_lbrack() n() list:(p_use_tree() ** (n() t_comma() n()) ) n() t_rbrack() { list })? {
+                UseTree {
+                    name,
+                    list: lists.unwrap_or(vec![]),
+                }
+            }
+
 
         /// stmt
         pub(super) rule p_stmt() -> AstStmt =
@@ -136,7 +187,7 @@ peg::parser! {
 
         /// call func
         pub(super) rule p_call_func() -> CallFunc =
-            name:ref_coron() n() t_lparen() n() args:(p_expr() ** (n() t_comma() n())) n() t_rparen() {
+            name:ref_dot() n() t_lparen() n() args:(p_expr() ** (n() t_comma() n())) n() t_rparen() {
                 CallFunc {
                     name,
                     args,

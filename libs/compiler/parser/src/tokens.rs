@@ -13,6 +13,9 @@ pub enum MeguToken<'a> {
     // nspace
     #[token("nspace")]
     DefNSpace,
+    // use
+    #[token("use")]
+    DefUse,
 
     // Parens
     #[token("(")]
