@@ -16,6 +16,12 @@ pub enum MeguToken<'a> {
     // use
     #[token("use")]
     DefUse,
+    // let
+    #[token("let")]
+    DefLet,
+    // mut
+    #[token("mut")]
+    DefMut,
 
     // Parens
     #[token("(")]
@@ -38,6 +44,10 @@ pub enum MeguToken<'a> {
     Dot,
     #[token(",")]
     Comma,
+
+    // equal
+    #[token("=")]
+    Equal,
 
     // whites
     #[regex(r"[ \t]*", logos::skip)]
