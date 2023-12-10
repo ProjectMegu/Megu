@@ -41,6 +41,8 @@ peg::parser! {
         rule t_fn() -> () = [MeguToken::DefFN] {}
         rule t_nspace() -> () = [MeguToken::DefNSpace] {}
         rule t_use() -> () = [MeguToken::DefUse] {}
+        rule t_let() -> () = [MeguToken::DefLet] {}
+        rule t_mut() -> () = [MeguToken::DefMut] {}
 
         // regexs
         rule t_ident() -> String = [MeguToken::Ident(s)] { s.to_string() }
@@ -58,6 +60,9 @@ peg::parser! {
         // dot
         rule t_dot() -> () = [MeguToken::Dot] {}
         rule t_comma() -> () = [MeguToken::Comma] {}
+
+        // equal
+        rule t_equal() -> () = [MeguToken::Equal] {}
 
         // must newline
         rule mn() -> () = [MeguToken::NewLine] {}
@@ -180,6 +185,28 @@ peg::parser! {
         /// stmt
         pub(super) rule p_stmt() -> AstStmt =
             expr:p_expr() { AstStmt::Expr(expr) }
+            / def_var:p_def_var() { AstStmt::DefV(def_var) }
+
+        /// def valiable
+        pub(super) rule p_def_var() -> AstDefValue =
+            // immutable
+            t_let() n() name:t_ident() n() t_colon() v_type:p_type() n() t_equal() n() value:p_expr() {
+                AstDefValue {
+                    is_mut: false,
+                    name,
+                    v_type,
+                    value,
+                }
+            }
+            // mutable
+            / t_mut() n() name:t_ident() n() t_colon() v_type:p_type() n() t_equal() n() value:p_expr() {
+                AstDefValue {
+                    is_mut: true,
+                    name,
+                    v_type,
+                    value,
+                }
+            }
 
         /// expr
         pub(super) rule p_expr() -> AstExpr =
@@ -469,6 +496,99 @@ mod tests {
                     relative: true,
                 },
             ];
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+    }
+
+    mod stmt {
+        use super::*;
+
+        /// Test case for parsing a statement.
+        #[test]
+        fn p_stmt_test() {
+            // Input string representing a statement
+            let input = r#"call_func(call_func())"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the statement and get the result
+            let result = megu_parser::p_stmt(&tokens);
+
+            // Expected AST representation of the statement
+            let expect = ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::CallFunc {
+                name: vec!["call_func".to_string()],
+                args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                    name: vec!["call_func".to_string()],
+                    args: vec![],
+                })],
+            }));
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+
+        /// Test case for parsing a variable definition.
+        #[test]
+        fn p_def_var_test() {
+            // Input string representing a variable definition
+            let input = r#"let test: Type1.Ref = call_func(call_func())"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the variable definition and get the result
+            let result = megu_parser::p_def_var(&tokens);
+
+            // Expected AST representation of the variable definition
+            let expect = ast::AstDefValue {
+                is_mut: false,
+                name: "test".to_string(),
+                v_type: ast::AstType {
+                    refs: vec!["Type1".to_string(), "Ref".to_string()],
+                },
+                value: ast::AstExpr::CallFunc(ast::CallFunc {
+                    name: vec!["call_func".to_string()],
+                    args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                        name: vec!["call_func".to_string()],
+                        args: vec![],
+                    })],
+                }),
+            };
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+
+        /// Test case for parsing a mutable variable definition.
+        #[test]
+        fn p_def_var_mut_test() {
+            // Input string representing a mutable variable definition
+            let input = r#"mut test: Type1.Ref = call_func(call_func())"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the mutable variable definition and get the result
+            let result = megu_parser::p_def_var(&tokens);
+
+            // Expected AST representation of the mutable variable definition
+            let expect = ast::AstDefValue {
+                is_mut: true,
+                name: "test".to_string(),
+                v_type: ast::AstType {
+                    refs: vec!["Type1".to_string(), "Ref".to_string()],
+                },
+                value: ast::AstExpr::CallFunc(ast::CallFunc {
+                    name: vec!["call_func".to_string()],
+                    args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                        name: vec!["call_func".to_string()],
+                        args: vec![],
+                    })],
+                }),
+            };
 
             // Assert that the result matches the expected AST
             assert_eq!(result, Ok(expect));

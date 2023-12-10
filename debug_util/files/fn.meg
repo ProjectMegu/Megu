@@ -1,1 +1,3 @@
-use .test.[test1,test2,test3]
+fn test() [
+    mut a: type = call()
+]
