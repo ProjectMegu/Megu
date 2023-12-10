@@ -47,7 +47,7 @@ jobs:
           docker save ${{ steps.image_tag.outputs.TAG }} > ${{ steps.image_tag.outputs.TPATH }}
       - name: Run Tests
         run: |
-          docker run --name megulang -v ${{ github.workspace }}:/work -w /work ${{ steps.image_tag.outputs.TAG }} cargo test
+          docker run --name megulang -v ${{ github.workspace }}:/work -w /work ${{ steps.image_tag.outputs.TAG }} /root/.cargo/bin/cargo test
   Lints:
     runs-on: ubuntu-latest
     steps:
