@@ -67,4 +67,10 @@ pub enum MeguToken<'a> {
     // Regexs
     #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*")]
     Ident(&'a str),
+    // numbers
+    #[regex(r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?")]
+    Number(&'a str),
+    // strings
+    #[regex(r#""([^"\\]|\\["\\bnfrt]|u[a-fA-F0-9]{4})*""#)]
+    String(&'a str),
 }

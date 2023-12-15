@@ -28,6 +28,13 @@ impl UseTree {
     }
 }
 
+fn lit(s: &str) -> String {
+    let byte_start = s.char_indices().nth(1).unwrap().0;
+    let byte_end = s.char_indices().nth_back(0).unwrap().0;
+    let s_sub: &str = &s[byte_start..byte_end];
+    s_sub.to_string()
+}
+
 peg::parser! {
     grammar megu_parser<'a>() for [MeguToken<'a>] {
         // entry point
@@ -46,6 +53,8 @@ peg::parser! {
 
         // regexs
         rule t_ident() -> String = [MeguToken::Ident(s)] { s.to_string() }
+        rule t_number() -> f64 = [MeguToken::Number(n)] { n.parse().unwrap() }
+        rule t_string() -> String = [MeguToken::String(s)] { lit(s) }
 
         // Parens
         rule t_lparen() -> () = [MeguToken::LParen] {}
@@ -211,6 +220,7 @@ peg::parser! {
         /// expr
         pub(super) rule p_expr() -> AstExpr =
             expr:p_call_func() { AstExpr::CallFunc(expr) }
+            / lit:p_value() { AstExpr::Lit(lit) }
 
         /// call func
         pub(super) rule p_call_func() -> CallFunc =
@@ -220,6 +230,10 @@ peg::parser! {
                     args,
                 }
             }
+        /// values
+        pub(super) rule p_value() -> AstLitValues =
+            number:t_number() { AstLitValues::Number(number) }
+            / string:t_string() { AstLitValues::String(string) }
     }
 }
 
