@@ -13,7 +13,7 @@ pub enum AstDef {
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstAttribute {
     pub name: Vec<String>,
-    pub value: Vec<AstExpr>
+    pub value: Vec<AstExpr>,
 }
 
 // DefFunc
