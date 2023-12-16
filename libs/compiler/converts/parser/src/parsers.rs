@@ -106,9 +106,10 @@ peg::parser! {
         /// fn
         pub(super) rule p_func() -> AstDefFunc =
             // fn ( name: type ): type [ expr ]
-            t_fn() n() name:t_ident() n() args:p_func_args() n() ret:p_func_ret()? n() inner:p_func_inner()
+            attr:p_attr()? n() t_fn() n() name:t_ident() n() args:p_func_args() n() ret:p_func_ret()? n() inner:p_func_inner()
             {
                 AstDefFunc {
+                    attr,
                     name: name.to_string(),
                     args,
                     ret,
@@ -152,16 +153,18 @@ peg::parser! {
 
         /// Line namespace
         pub(super) rule p_line_namespace() -> AstLineNamespace =
-            t_nspace() n() tree:p_namespace_tree() {
+            attr:p_attr()? n() t_nspace() n() tree:p_namespace_tree() {
                 AstLineNamespace {
+                    attr,
                     tree,
                 }
             }
 
         /// Block namespace
         pub(super) rule p_block_namespace() -> AstBlockNamespace =
-            t_nspace() n() tree:p_namespace_tree() n() t_lbrack() n() inner:(p_def() ** mn()) n() t_rbrack() {
+            attr:p_attr()? n() t_nspace() n() tree:p_namespace_tree() n() t_lbrack() n() inner:(p_def() ** mn()) n() t_rbrack() {
                 AstBlockNamespace {
+                    attr,
                     tree,
                     inner,
                 }
@@ -187,6 +190,16 @@ peg::parser! {
                 UseTree {
                     name,
                     list: lists.unwrap_or(vec![]),
+                }
+            }
+        
+        /// Attribute
+        /// [Attribute("a","b")]
+        pub(super) rule p_attr() -> AstAttribute =
+            t_lbrack() n() name:ref_dot() n() t_lparen() n() value:(p_expr() ** (n() t_comma() n())) n() t_rparen() n() t_rbrack() {
+                AstAttribute {
+                    name,
+                    value,
                 }
             }
 
@@ -234,6 +247,8 @@ peg::parser! {
         pub(super) rule p_value() -> AstLitValues =
             number:t_number() { AstLitValues::Number(number) }
             / string:t_string() { AstLitValues::String(string) }
+        
+        
     }
 }
 
@@ -283,6 +298,7 @@ mod tests {
 
             // Expected AST representation of the function definition
             let expect = ast::AstDefFunc {
+                attr: None,
                 name: "test".to_string(),
                 args: vec![ast::AstDefFuncArg {
                     name: "aaa".to_string(),
@@ -312,6 +328,7 @@ mod tests {
 
             // Expected AST representation of the function definition
             let expect = ast::AstDefFunc {
+                attr: None,
                 name: "test".to_string(),
                 args: vec![],
                 ret: Some(ast::AstType {
@@ -411,6 +428,7 @@ mod tests {
 
             // Expected AST representation of the line namespace
             let expect = ast::AstLineNamespace {
+                attr: None,
                 tree: ast::AstNameSpaceTree {
                     name: vec!["test".to_string()],
                     relative: true,
@@ -437,11 +455,13 @@ mod tests {
 
             // Expected AST representation of the block namespace
             let expect = ast::AstBlockNamespace {
+                attr: None,
                 tree: ast::AstNameSpaceTree {
                     name: vec!["test".to_string()],
                     relative: true,
                 },
                 inner: vec![ast::AstDef::Func(ast::AstDefFunc {
+                    attr: None,
                     name: "test".to_string(),
                     args: vec![],
                     ret: None,
@@ -602,6 +622,35 @@ mod tests {
                         args: vec![],
                     })],
                 }),
+            };
+
+            // Assert that the result matches the expected AST
+            assert_eq!(result, Ok(expect));
+        }
+    }
+
+    mod attr {
+        use super::*;
+
+        /// Test case for parsing an attribute.
+        #[test]
+        fn p_attribute_test() {
+            // Input string representing an attribute
+            let input = r#"[Attribute("a", "b")]"#;
+
+            // Tokenize the input string
+            let tokens = tokens::lexer(input);
+
+            // Parse the attribute and get the result
+            let result = megu_parser::p_attr(&tokens);
+
+            // Expected AST representation of the attribute
+            let expect = ast::AstAttribute {
+                name: vec!["Attribute".to_string()],
+                value: vec![
+                    ast::AstExpr::Lit(ast::AstLitValues::String("a".to_string())),
+                    ast::AstExpr::Lit(ast::AstLitValues::String("b".to_string())),
+                ],
             };
 
             // Assert that the result matches the expected AST

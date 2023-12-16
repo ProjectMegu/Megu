@@ -8,10 +8,19 @@ pub enum AstDef {
     Use(AstUse),
 }
 
+// Attribute
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AstAttribute {
+    pub name: Vec<String>,
+    pub value: Vec<AstExpr>
+}
+
 // DefFunc
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstDefFunc {
+    pub attr: Option<AstAttribute>,
     pub name: String,
     pub args: Vec<AstDefFuncArg>,
     pub ret: Option<AstType>,
@@ -34,11 +43,13 @@ pub struct AstNameSpaceTree {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstLineNamespace {
+    pub attr: Option<AstAttribute>,
     pub tree: AstNameSpaceTree,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstBlockNamespace {
+    pub attr: Option<AstAttribute>,
     pub tree: AstNameSpaceTree,
     pub inner: Vec<AstDef>,
 }
