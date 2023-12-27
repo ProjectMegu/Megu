@@ -9,8 +9,6 @@ pub fn parse(code: &str) -> anyhow::Result<Vec<ast::AstDef>> {
         Err(err) => {
             anyhow::bail!("parse error: {:?}", err);
         }
-        Ok(ast) => {
-            Ok(ast)
-        }
+        Ok(ast) => Ok(ast),
     }
 }
