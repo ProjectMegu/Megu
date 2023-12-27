@@ -1,0 +1,13 @@
+[package]
+name = "meguc_main"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+codes = { path = "../defs/codes" }
+anyhow.workspace = true
+ast = { path = "../defs/ast" }
+parser = { path = "../converts/parser" }
+utils = { path = "../../utils" }

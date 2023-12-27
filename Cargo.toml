@@ -3,6 +3,9 @@ members = [
     "debug_util/cmd", # debuger
     "libs/compiler/defs/*",
     "libs/compiler/converts/*",
+    "libs/compiler/meguc_main",
+    "libs/utils",
+    "cli" # cli
 ]
 
 [workspace.dependencies]
