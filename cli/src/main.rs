@@ -1,15 +1,14 @@
-mod ws;
 mod build;
+mod ws;
 
 use build::parse_build;
 use clap::{Parser, Subcommand};
 use ws::parse_ws;
 
-
 #[derive(Debug, Parser)]
 struct Cli {
     #[command(subcommand)]
-    cmds: Cmds
+    cmds: Cmds,
 }
 
 #[derive(Debug, Subcommand)]
@@ -20,7 +19,7 @@ enum Cmds {
     Build {
         #[arg(short, long)]
         package: Option<String>,
-    }
+    },
 }
 
 fn main() -> anyhow::Result<()> {

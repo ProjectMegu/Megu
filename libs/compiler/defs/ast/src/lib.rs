@@ -18,7 +18,7 @@ pub struct AstContext {
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstModule {
     pub name: String,
-    pub dirs: Vec<AstDir>,
+    pub dirs: AstDir,
 }
 
 #[derive(Debug, Clone, PartialEq)]

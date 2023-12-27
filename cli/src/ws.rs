@@ -1,4 +1,7 @@
-use std::{fs::{File, self}, io::Write};
+use std::{
+    fs::{self, File},
+    io::Write,
+};
 
 use clap::Subcommand;
 
@@ -11,7 +14,7 @@ pub enum WSCmds {
         bin: bool,
         #[arg(short, long)]
         lib: bool,
-    }
+    },
 }
 
 const WS_INIT_TOML: &str = r#"[context]
@@ -30,7 +33,7 @@ const WS_NEW_LIB_TEMP: &str = r#"fn Add(a: Int,b: Int) [
 ]
 "#;
 
-pub fn parse_ws(ws: WSCmds) -> anyhow::Result<()>{
+pub fn parse_ws(ws: WSCmds) -> anyhow::Result<()> {
     match ws {
         WSCmds::Init => {
             println!("Workspace Init...");
@@ -39,17 +42,25 @@ pub fn parse_ws(ws: WSCmds) -> anyhow::Result<()>{
         }
         WSCmds::New { name, bin, lib } => {
             println!("Workspace Module New...: {}", name);
-            let type_ = if bin {"bin"} else if lib {"lib"} else {"bin"};
-            
-            let toml = format!(r#"[module]
+            let type_ = if bin {
+                "bin"
+            } else if lib {
+                "lib"
+            } else {
+                "bin"
+            };
+
+            let toml = format!(
+                r#"[module]
 name = "{name}"
 type = "{type_}"
 
 # [[dep]]
 # name = "DEPModule"
 # path = {{ type = "local", path = "../DEPModule" }}
-"#);
-            
+"#
+            );
+
             // module root dir
             fs::create_dir(&name)?;
             // module setting file

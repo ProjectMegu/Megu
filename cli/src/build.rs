@@ -1,9 +1,9 @@
 use std::fs::{self};
 
 use anyhow::Context;
-use codes::{CodeDir, CodeSource, CodeModule, CodeContext};
+use codes::{CodeContext, CodeDir, CodeModule, CodeSource};
 
-pub fn parse_build(pkg: Option<String>) -> anyhow::Result<()> {
+pub fn parse_build(_: Option<String>) -> anyhow::Result<()> {
     let files = bind_result(fs::read_dir(".")?)?;
 
     let mut config = None;
@@ -25,20 +25,25 @@ pub fn parse_build(pkg: Option<String>) -> anyhow::Result<()> {
         data.name = "__ROOT__".to_string();
         let root_name = {
             let module = config_toml.get("module").context("internal error")?;
-            module.as_table().context("'module' is not table")?.get("name").context("'module.name' couldn't find")?.as_str().context("'module.name' is not string")?
+            module
+                .as_table()
+                .context("'module' is not table")?
+                .get("name")
+                .context("'module.name' couldn't find")?
+                .as_str()
+                .context("'module.name' is not string")?
         };
 
         let root = CodeModule {
             name: root_name.to_string(),
-            dirs: data
+            dirs: data,
         };
 
         // add deps
 
         meguc_main::megu_compile(CodeContext {
-            modules: vec![root]
+            modules: vec![root],
         })?;
-
     } else {
         anyhow::bail!("Megu.toml is invalid");
     }
@@ -75,7 +80,7 @@ pub fn read_dir_recursive(path: &str) -> anyhow::Result<CodeDir> {
 }
 
 pub fn get_extension(name: String) -> Option<String> {
-    let idx = name.find(".")?;
+    let idx = name.find('.')?;
     let ext = name[idx..].to_string();
     Some(ext)
 }

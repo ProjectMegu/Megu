@@ -8,3 +8,6 @@ edition = "2021"
 [dependencies]
 codes = { path = "../defs/codes" }
 anyhow.workspace = true
+ast = { path = "../defs/ast" }
+parser = { path = "../converts/parser" }
+utils = { path = "../../utils" }
