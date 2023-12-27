@@ -203,6 +203,7 @@ dependencies = [
  "codes",
  "meguc_main",
  "toml",
+ "utils",
 ]
 
 [[package]]

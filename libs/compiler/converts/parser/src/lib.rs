@@ -7,7 +7,7 @@ pub fn parse(code: &str) -> anyhow::Result<Vec<ast::AstDef>> {
 
     match parse {
         Err(err) => {
-            anyhow::bail!("parse error: {:?}", err);
+            anyhow::bail!("parse error in input code: {:?}\nCode: {}", err, code);
         }
         Ok(ast) => Ok(ast),
     }

@@ -2,6 +2,7 @@ use std::fs::{self};
 
 use anyhow::Context;
 use codes::{CodeContext, CodeDir, CodeModule, CodeSource};
+use utils::bind_result;
 
 pub fn parse_build(_: Option<String>) -> anyhow::Result<()> {
     let files = bind_result(fs::read_dir(".")?)?;
@@ -49,14 +50,6 @@ pub fn parse_build(_: Option<String>) -> anyhow::Result<()> {
     }
 
     Ok(())
-}
-
-pub fn bind_result<T, E>(iter: impl Iterator<Item = Result<T, E>>) -> Result<Vec<T>, E> {
-    let mut vec = Vec::new();
-    for item in iter {
-        vec.push(item?);
-    }
-    Ok(vec)
 }
 
 pub fn read_dir_recursive(path: &str) -> anyhow::Result<CodeDir> {

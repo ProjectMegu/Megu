@@ -10,9 +10,9 @@ pub enum WSCmds {
     Init,
     New {
         name: String,
-        #[arg(short, long)]
+        #[arg(short, long, group = "module_type")]
         bin: bool,
-        #[arg(short, long)]
+        #[arg(short, long, group = "module_type")]
         lib: bool,
     },
 }

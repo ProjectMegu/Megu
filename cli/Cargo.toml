@@ -11,3 +11,4 @@ toml = "0"
 anyhow.workspace = true
 codes = { path = "../libs/compiler/defs/codes" }
 meguc_main = { path = "../libs/compiler/meguc_main"}
+utils = { path = "../libs/utils"}
