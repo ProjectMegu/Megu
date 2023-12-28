@@ -1,6 +1,8 @@
+use ast::{AstContext, AstDir, AstModule, AstSource};
 use clap::Parser;
 use parser::parse;
 use std::{fs::File, io::Read, path::PathBuf};
+use to_hir::into_hir;
 
 #[derive(Debug, Parser)]
 struct Cmd {
@@ -17,6 +19,18 @@ fn main() {
             .unwrap_or_else(|_| panic!("can't load file: {}", cmd.path.display()));
         data
     };
-    let _ast = parse(&code);
-    // let _ = dbg!(ast);
+    let _ast = dbg!(parse(&code)).unwrap();
+    let _hir = dbg!(into_hir(AstContext {
+        modules: vec![AstModule {
+            name: "main".to_string(),
+            dirs: AstDir {
+                name: "__ROOT__".to_string(),
+                dirs: vec![],
+                source: vec![AstSource {
+                    name: "main.meg".to_string(),
+                    defs: _ast,
+                }],
+            }
+        }]
+    }));
 }

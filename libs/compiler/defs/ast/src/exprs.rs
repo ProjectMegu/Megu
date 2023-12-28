@@ -2,12 +2,12 @@ use crate::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum AstExpr {
-    CallFunc(CallFunc),
+    CallFunc(AstCallFunc),
     Lit(AstLitValues),
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct CallFunc {
+pub struct AstCallFunc {
     pub name: Vec<String>,
     pub args: Vec<AstExpr>,
 }

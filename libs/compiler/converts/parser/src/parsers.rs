@@ -236,9 +236,9 @@ peg::parser! {
             / lit:p_value() { AstExpr::Lit(lit) }
 
         /// call func
-        pub(super) rule p_call_func() -> CallFunc =
+        pub(super) rule p_call_func() -> AstCallFunc =
             name:ref_dot() n() t_lparen() n() args:(p_expr() ** (n() t_comma() n())) n() t_rparen() {
-                CallFunc {
+                AstCallFunc {
                     name,
                     args,
                 }
@@ -390,16 +390,16 @@ mod tests {
 
             // Expected AST representation of the function inner statements
             let expect = vec![
-                ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::CallFunc {
+                ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::AstCallFunc {
                     name: vec!["call_func".to_string()],
-                    args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                    args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
                         name: vec!["call_func".to_string()],
                         args: vec![],
                     })],
                 })),
-                ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::CallFunc {
+                ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::AstCallFunc {
                     name: vec!["test".to_string(), "call_func".to_string()],
-                    args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                    args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
                         name: vec!["call_func".to_string()],
                         args: vec![],
                     })],
@@ -552,9 +552,9 @@ mod tests {
             let result = megu_parser::p_stmt(&tokens);
 
             // Expected AST representation of the statement
-            let expect = ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::CallFunc {
+            let expect = ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::AstCallFunc {
                 name: vec!["call_func".to_string()],
-                args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
                     name: vec!["call_func".to_string()],
                     args: vec![],
                 })],
@@ -583,9 +583,9 @@ mod tests {
                 v_type: ast::AstType {
                     refs: vec!["Type1".to_string(), "Ref".to_string()],
                 },
-                value: ast::AstExpr::CallFunc(ast::CallFunc {
+                value: ast::AstExpr::CallFunc(ast::AstCallFunc {
                     name: vec!["call_func".to_string()],
-                    args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                    args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
                         name: vec!["call_func".to_string()],
                         args: vec![],
                     })],
@@ -615,9 +615,9 @@ mod tests {
                 v_type: ast::AstType {
                     refs: vec!["Type1".to_string(), "Ref".to_string()],
                 },
-                value: ast::AstExpr::CallFunc(ast::CallFunc {
+                value: ast::AstExpr::CallFunc(ast::AstCallFunc {
                     name: vec!["call_func".to_string()],
-                    args: vec![ast::AstExpr::CallFunc(ast::CallFunc {
+                    args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
                         name: vec!["call_func".to_string()],
                         args: vec![],
                     })],

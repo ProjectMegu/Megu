@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.4.11", features = ["derive"] }
 parser = { path = "../../libs/compiler/converts/parser" }
+to_hir = { path = "../../libs/compiler/converts/to_hir" }
+ast = { path = "../../libs/compiler/defs/ast" }
