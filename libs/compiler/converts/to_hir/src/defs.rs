@@ -45,7 +45,6 @@ pub(crate) fn into_expr(expr: AstExpr) -> HirExpr {
         AstExpr::Lit(lit) => match lit {
             AstLitValues::Number(n) => HirExpr::LitInt(n),
             AstLitValues::String(s) => HirExpr::LitStr(s),
-            _ => todo!(),
         },
     }
 }
