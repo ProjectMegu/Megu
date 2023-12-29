@@ -1,14 +1,46 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use ast::{AstContext, AstDef, AstDir};
+use hir::{HirCtx, HirMod};
+
+mod defs;
+
+pub fn into_hir(ast: AstContext) -> HirCtx {
+    let mut res = HirCtx { mods: Vec::new() };
+
+    // TODO: add deps
+
+    for m in ast.modules {
+        res.mods.push(HirMod {
+            name: m.name.clone(),
+            items: defs::into_defs(bring_source(m.dirs), m.name),
+        })
+    }
+
+    res
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+fn bring_source(dir: AstDir) -> Vec<(Vec<String>, AstDef)> {
+    let mut res = Vec::new();
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    for s in dir.source {
+        res.append(
+            &mut s
+                .defs
+                .into_iter()
+                .map(|d| (vec![dir.name.clone(), s.name.clone()], d))
+                .collect(),
+        )
     }
+
+    for d in dir.dirs {
+        let mut a = bring_source(d)
+            .into_iter()
+            .map(|(mut a, b)| {
+                a.insert(0, dir.name.clone());
+                (a, b)
+            })
+            .collect::<Vec<_>>();
+        res.append(&mut a)
+    }
+
+    res
 }
