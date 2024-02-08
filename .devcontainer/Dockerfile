@@ -19,10 +19,10 @@ RUN --mount=type=cache,target=/var/lib/apt/lists \
     apt-get install -y \
     # llvm
     libllvm16 llvm-16 llvm-16-dev \
-    # clang
-    clang-16 \
-    # mlir
-    libmlir-16-dev mlir-16-tools
+    # linker
+    lld-16 \
+    # clang (dev runtime)
+    clang-16
 
 # install rust & components
 RUN curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | bash -s -- -y
