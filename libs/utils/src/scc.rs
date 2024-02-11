@@ -91,14 +91,14 @@ pub fn scc(n: usize, edges: &Vec<(usize, usize)>) -> Vec<Vec<usize>> {
     Scc::new(n, edges).build()
 }
 
-#[derive(Debug, Default)]
-pub struct SccMap<'a, T: PartialEq> {
-    map: HashMap<usize, &'a T>,
+#[derive(Debug, Default, Clone)]
+pub struct SccMap<T: PartialEq + Clone> {
+    map: HashMap<usize, T>,
     edges: Vec<(usize, usize)>,
     node_num: usize,
 }
 
-impl<'a, T: PartialEq> SccMap<'a, T> {
+impl<T: PartialEq + Clone> SccMap<T> {
     pub fn new() -> Self {
         Self {
             map: HashMap::new(),
@@ -107,32 +107,37 @@ impl<'a, T: PartialEq> SccMap<'a, T> {
         }
     }
 
-    pub fn add_edge(&mut self, edge: (&'a T, &'a T)) {
+    pub fn add_edge(&mut self, edge: (T, T)) {
         let (a, b) = edge;
 
         if !self.map.iter().any(|(_, k)| *k == a) {
-            self.map.insert(self.node_num, a);
+            self.map.insert(self.node_num, a.clone());
             self.node_num += 1;
         }
 
         if !self.map.iter().any(|(_, k)| *k == b) {
-            self.map.insert(self.node_num, b);
+            self.map.insert(self.node_num, b.clone());
             self.node_num += 1;
         }
 
         self.edges.push((
-            *self.map.iter().find(|(_, k)| **k == a).unwrap().0,
-            *self.map.iter().find(|(_, k)| **k == b).unwrap().0,
+            *self.map.iter().find(|(_, k)| **k == a.clone()).unwrap().0,
+            *self.map.iter().find(|(_, k)| **k == b.clone()).unwrap().0,
         ));
     }
 
-    pub fn run(&self) -> Vec<Vec<&'a T>> {
+    pub fn run(&self) -> Vec<Vec<T>> {
         let scc = scc(self.node_num, &self.edges);
         let mut ret = Vec::new();
         for scc in &scc {
-            ret.push(scc.iter().map(|i| *self.map.get(i).unwrap()).collect());
+            ret.push(
+                scc.iter()
+                    .map(|i| (*self.map.get(i).unwrap()).clone())
+                    .collect(),
+            );
         }
 
+        ret.reverse();
         ret
     }
 }
@@ -149,18 +154,19 @@ mod tests {
 
     #[test]
     fn test_scc_map() {
-        let mut scc_map = SccMap::<'_, String>::new();
-        
+        let mut scc_map = SccMap::<&String>::new();
+
         let a = "a".to_string();
         let b = "b".to_string();
         let c = "c".to_string();
         let d = "d".to_string();
-        
+
         scc_map.add_edge((&a, &b));
         scc_map.add_edge((&b, &c));
         scc_map.add_edge((&c, &a));
         scc_map.add_edge((&d, &a));
 
-        println!("{:?}",scc_map.run());
+        let expect = vec![vec!["a", "c", "b"], vec!["d"]];
+        assert_eq!(scc_map.run(), expect);
     }
 }

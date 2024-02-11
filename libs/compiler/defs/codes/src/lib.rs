@@ -1,6 +1,9 @@
-#[derive(Debug, Clone, PartialEq)]
+use utils::SccMap;
+
+#[derive(Debug, Clone)]
 pub struct CodeContext {
     pub modules: Vec<CodeModule>,
+    pub deps: SccMap<String>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
