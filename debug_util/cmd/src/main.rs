@@ -1,5 +1,6 @@
 use ast::{AstContext, AstDir, AstModule, AstSource};
 use clap::Parser;
+use hir_nspace::pass_nspace;
 use parser::parse;
 use std::{fs::File, io::Read, path::PathBuf};
 use to_hir::into_hir;
@@ -34,4 +35,5 @@ fn main() {
         }],
         deps: Default::default(),
     }));
+    let _hir = dbg!(pass_nspace(_hir));
 }

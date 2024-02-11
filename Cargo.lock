@@ -115,6 +115,7 @@ version = "0.1.0"
 dependencies = [
  "ast",
  "clap",
+ "hir_nspace",
  "parser",
  "to_hir",
 ]
@@ -161,6 +162,13 @@ name = "hir"
 version = "0.1.0"
 dependencies = [
  "utils",
+]
+
+[[package]]
+name = "hir_nspace"
+version = "0.1.0"
+dependencies = [
+ "hir",
 ]
 
 [[package]]

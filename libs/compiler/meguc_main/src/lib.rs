@@ -5,8 +5,6 @@ use utils::bind_result;
 pub fn megu_compile(ctx: CodeContext) -> anyhow::Result<()> {
     dbg!(&ctx);
 
-    // TODO: add deps
-
     // 仮置き
     let _ = convert_ast_ctx(ctx)?;
 

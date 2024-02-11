@@ -8,11 +8,14 @@ pub struct HirCtx {
     pub deps: SccMap<String>
 }
 
+type NameSpace = Vec<String>;
+type FilePlace = Vec<String>;
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct HirMod {
     pub name: String,
-    pub items: HashMap<Vec<String>, HirItem>,
-    pub file_item: HashMap<Vec<String>, HirFileItem>
+    pub items: HashMap<NameSpace, HirItem>,
+    pub file_item: HashMap<FilePlace, HirFileItem>
 }
 
 #[derive(Debug, Clone, PartialEq)]

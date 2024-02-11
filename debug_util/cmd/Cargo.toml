@@ -9,4 +9,5 @@ edition = "2021"
 clap = { version = "4.4.11", features = ["derive"] }
 parser = { path = "../../libs/compiler/converts/parser" }
 to_hir = { path = "../../libs/compiler/converts/to_hir" }
+hir_nspace = {path = "../../libs/compiler/converts/hir_nspace"}
 ast = { path = "../../libs/compiler/defs/ast" }
