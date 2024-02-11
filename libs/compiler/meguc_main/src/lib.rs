@@ -20,7 +20,7 @@ pub fn convert_ast_ctx(ctx: CodeContext) -> anyhow::Result<AstContext> {
         .map(|a| {
             Ok(AstModule {
                 name: a.name,
-                dirs: convert_ast(a.dirs)?,
+                root_dir: convert_ast(a.dirs)?,
             })
         })
         .collect();

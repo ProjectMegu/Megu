@@ -1,0 +1,28 @@
+headers [
+    module System [
+        fn System.Print(str: String): Unknown
+        fn System.AAA(): void
+    ]
+
+    module Bin [
+        fn main(): void
+    ]
+]
+
+impls [
+    module A [
+        fn System.Print(str: String): void [
+            <Native Impl>
+        ]
+
+        fn System.AAA(): void [
+            <Native Impl>
+        ]
+    ]
+
+    module Bin [
+        fn main(): void [
+            AAA()
+        ]
+    ]
+]

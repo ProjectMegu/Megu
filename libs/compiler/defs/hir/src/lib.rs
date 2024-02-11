@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub struct HirCtx {
     pub mods: Vec<HirMod>,
 }
@@ -9,6 +9,19 @@ pub struct HirCtx {
 pub struct HirMod {
     pub name: String,
     pub items: HashMap<Vec<String>, HirItem>,
+    pub file_item: HashMap<Vec<String>, HirFileItem>
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct HirFileItem {
+    pub line_nspace: HirNameSpaceTree,
+    pub use_: Vec<HirNameSpaceTree>
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct HirNameSpaceTree {
+    pub name: Vec<String>,
+    pub relative: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -27,6 +40,7 @@ pub enum HirItemType {
 pub struct HirFn {
     // pub params: Vec<HirFnParam>,
     pub body: Vec<HirStmt>,
+    pub name: String
 }
 
 #[derive(Debug, Clone, PartialEq)]

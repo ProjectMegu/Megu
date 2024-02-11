@@ -1,0 +1,67 @@
+use std::collections::HashMap;
+
+use ast::AstDef;
+use hir::{HirFileItem, HirNameSpaceTree};
+
+pub(crate) fn into_file_item(
+    items: Vec<(Vec<String>, AstDef)>,
+) -> HashMap<Vec<String>, HirFileItem> {
+    let mut file_map = HashMap::new();
+
+    for (place, def) in items {
+        match def {
+            AstDef::LineNSpace(nspace) => {
+                if file_map.get(&place).is_some() {
+                    let data: &mut HirFileItem = file_map.get_mut(&place).unwrap();
+                    data.line_nspace = HirNameSpaceTree {
+                        name: nspace.tree.name,
+                        relative: nspace.tree.relative,
+                    };
+                } else {
+                    file_map.insert(
+                        place,
+                        HirFileItem {
+                            line_nspace: HirNameSpaceTree {
+                                name: nspace.tree.name,
+                                relative: nspace.tree.relative,
+                            },
+                            use_: Vec::new(),
+                        },
+                    );
+                }
+            }
+            AstDef::Use(use_) => {
+                if file_map.get(&place).is_some() {
+                    let data: &mut HirFileItem = file_map.get_mut(&place).unwrap();
+                    data.use_ = use_
+                        .into_iter()
+                        .map(|ns| HirNameSpaceTree {
+                            name: ns.name,
+                            relative: ns.relative,
+                        })
+                        .collect();
+                } else {
+                    file_map.insert(
+                        place,
+                        HirFileItem {
+                            line_nspace: HirNameSpaceTree {
+                                name: Vec::new(),
+                                relative: false,
+                            },
+                            use_: use_
+                                .into_iter()
+                                .map(|ns| HirNameSpaceTree {
+                                    name: ns.name,
+                                    relative: ns.relative,
+                                })
+                                .collect(),
+                        },
+                    );
+                }
+            }
+            _ => todo!(),
+        }
+    }
+
+    file_map
+}

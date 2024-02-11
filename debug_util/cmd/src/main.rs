@@ -23,7 +23,7 @@ fn main() {
     let _hir = dbg!(into_hir(AstContext {
         modules: vec![AstModule {
             name: "main".to_string(),
-            dirs: AstDir {
+            root_dir: AstDir {
                 name: "__ROOT__".to_string(),
                 dirs: vec![],
                 source: vec![AstSource {

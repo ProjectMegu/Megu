@@ -13,10 +13,11 @@ pub(crate) fn into_defs(
         match def {
             AstDef::Func(func) => {
                 res.insert(
-                    vec![mod_name.clone(), func.name /* 仮 */],
+                    vec![mod_name.clone(), func.name.clone() /* 仮 */],
                     HirItem {
                         place,
                         item_type: HirItemType::Fn(hir::HirFn {
+                            name: func.name,
                             body: func.inner.into_iter().map(into_stmt).collect(),
                         }),
                     },
