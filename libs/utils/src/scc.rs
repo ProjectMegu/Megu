@@ -1,10 +1,6 @@
 //! sccアルゴルズムを実装する
 
-use std::{
-    collections::{hash_map::DefaultHasher, HashMap, VecDeque},
-    hash::{Hash, Hasher},
-    marker::PhantomData,
-};
+use std::collections::{HashMap, VecDeque};
 
 struct Scc {
     g: Vec<Vec<usize>>,
@@ -143,10 +139,9 @@ impl<T: PartialEq + Clone> SccMap<T> {
 }
 
 mod tests {
-    use super::*;
-
     #[test]
     fn test_scc() {
+        use super::scc;
         let edges = vec![(0, 1), (1, 2), (2, 0), (1, 3), (3, 4), (4, 5), (5, 3)];
         let scc = scc(6, &edges);
         assert_eq!(scc, vec![vec![0, 2, 1], vec![3, 5, 4]]);
@@ -154,6 +149,7 @@ mod tests {
 
     #[test]
     fn test_scc_map() {
+        use super::SccMap;
         let mut scc_map = SccMap::<&String>::new();
 
         let a = "a".to_string();
