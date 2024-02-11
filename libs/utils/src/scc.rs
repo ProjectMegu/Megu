@@ -1,6 +1,10 @@
 //! sccアルゴルズムを実装する
 
-use std::collections::VecDeque;
+use std::{
+    collections::{hash_map::DefaultHasher, HashMap, VecDeque},
+    hash::{Hash, Hasher},
+    marker::PhantomData,
+};
 
 struct Scc {
     g: Vec<Vec<usize>>,
@@ -85,4 +89,78 @@ impl Scc {
 
 pub fn scc(n: usize, edges: &Vec<(usize, usize)>) -> Vec<Vec<usize>> {
     Scc::new(n, edges).build()
+}
+
+#[derive(Debug, Default)]
+pub struct SccMap<'a, T: PartialEq> {
+    map: HashMap<usize, &'a T>,
+    edges: Vec<(usize, usize)>,
+    node_num: usize,
+}
+
+impl<'a, T: PartialEq> SccMap<'a, T> {
+    pub fn new() -> Self {
+        Self {
+            map: HashMap::new(),
+            edges: Vec::new(),
+            node_num: 0,
+        }
+    }
+
+    pub fn add_edge(&mut self, edge: (&'a T, &'a T)) {
+        let (a, b) = edge;
+
+        if !self.map.iter().any(|(_, k)| *k == a) {
+            self.map.insert(self.node_num, a);
+            self.node_num += 1;
+        }
+
+        if !self.map.iter().any(|(_, k)| *k == b) {
+            self.map.insert(self.node_num, b);
+            self.node_num += 1;
+        }
+
+        self.edges.push((
+            *self.map.iter().find(|(_, k)| **k == a).unwrap().0,
+            *self.map.iter().find(|(_, k)| **k == b).unwrap().0,
+        ));
+    }
+
+    pub fn run(&self) -> Vec<Vec<&'a T>> {
+        let scc = scc(self.node_num, &self.edges);
+        let mut ret = Vec::new();
+        for scc in &scc {
+            ret.push(scc.iter().map(|i| *self.map.get(i).unwrap()).collect());
+        }
+
+        ret
+    }
+}
+
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_scc() {
+        let edges = vec![(0, 1), (1, 2), (2, 0), (1, 3), (3, 4), (4, 5), (5, 3)];
+        let scc = scc(6, &edges);
+        assert_eq!(scc, vec![vec![0, 2, 1], vec![3, 5, 4]]);
+    }
+
+    #[test]
+    fn test_scc_map() {
+        let mut scc_map = SccMap::<'_, String>::new();
+        
+        let a = "a".to_string();
+        let b = "b".to_string();
+        let c = "c".to_string();
+        let d = "d".to_string();
+        
+        scc_map.add_edge((&a, &b));
+        scc_map.add_edge((&b, &c));
+        scc_map.add_edge((&c, &a));
+        scc_map.add_edge((&d, &a));
+
+        println!("{:?}",scc_map.run());
+    }
 }
