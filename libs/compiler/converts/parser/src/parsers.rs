@@ -186,7 +186,7 @@ peg::parser! {
             }
 
         pub(super) rule p_use_tree() -> UseTree =
-            name:ref_dot() n() lists:(t_dot() n() t_lbrack() n() list:(p_use_tree() ** (n() t_comma() n()) ) t_comma()? n() t_rbrack() { list })? {
+            name:ref_dot() lists:(n() t_dot() n() t_lbrack() n() list:(p_use_tree() ** (n() t_comma() n()) ) t_comma()? n() t_rbrack() { list })? {
                 UseTree {
                     name,
                     list: lists.unwrap_or(vec![]),

@@ -11,8 +11,6 @@ mod file_item;
 pub fn into_hir(ast: AstContext) -> HirCtx {
     let mut res = HirCtx::default();
 
-    // TODO: add deps
-
     for m in ast.modules {
         let (source_def, file_def) = bring_source(m.root_dir);
 
@@ -22,6 +20,8 @@ pub fn into_hir(ast: AstContext) -> HirCtx {
             file_item: file_item::into_file_item(file_def),
         });
     }
+
+    res.deps = ast.deps;
 
     res
 }
@@ -42,6 +42,7 @@ fn bring_source(dir: AstDir) -> (Vec<SourceItem>, Vec<FileItem>) {
                 AstDef::LineNSpace(_) | AstDef::Use(_) => {
                     res_file.push((vec![dir.name.clone(), s.name.clone()], def))
                 }
+                #[allow(unreachable_patterns)]
                 _ => todo!(),
             }
         }

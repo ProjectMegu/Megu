@@ -31,6 +31,7 @@ fn main() {
                     defs: _ast,
                 }],
             }
-        }]
+        }],
+        deps: Default::default(),
     }));
 }

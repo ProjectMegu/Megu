@@ -1,8 +1,11 @@
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, PartialEq, Default)]
+use utils::SccMap;
+
+#[derive(Debug, Clone, Default)]
 pub struct HirCtx {
     pub mods: Vec<HirMod>,
+    pub deps: SccMap<String>
 }
 
 #[derive(Debug, Clone, PartialEq)]

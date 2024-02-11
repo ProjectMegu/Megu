@@ -10,9 +10,12 @@ pub use stmts::*;
 pub use util::*;
 pub use values::*;
 
-#[derive(Debug, Clone, PartialEq)]
+use utils::SccMap;
+
+#[derive(Debug, Clone)]
 pub struct AstContext {
     pub modules: Vec<AstModule>,
+    pub deps: SccMap<String>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
