@@ -5,6 +5,7 @@ members = [
     "libs/compiler/converts/*",
     "libs/compiler/meguc_main",
     "libs/utils",
+    "libs/aidan-rs",
     "cli" # cli
 ]
 

@@ -45,15 +45,15 @@ jobs:
           docker build -t ${{ steps.image_tag.outputs.TAG }} ./.devcontainer
           mkdir -p ${{ steps.image_tag.outputs.CPATH }}
           docker save ${{ steps.image_tag.outputs.TAG }} > ${{ steps.image_tag.outputs.TPATH }}
-      - name: Run Tests
+      - name: Launch Container
         run: |
-          docker run --name megulang -v ${{ github.workspace }}:/work -w /work ${{ steps.image_tag.outputs.TAG }} /root/.cargo/bin/cargo test
-  Lints:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - run: cargo clippy -- -D warnings
-      - run: cargo fmt --all --check
+          docker run --name megulang -v ${{ github.workspace }}:/work -w /work --tty -d ${{ steps.image_tag.outputs.TAG }}
+      - name: Run Test
+        run: |
+          docker exec megulang /root/.cargo/bin/cargo test
+      - name: Run Lint
+        run: |
+          docker exec megulang /root/.cargo/bin/cargo clippy -- -D warnings
+      - name: Run Format
+        run: |
+          docker exec megulang /root/.cargo/bin/cargo fmt --all --check
