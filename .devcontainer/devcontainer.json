@@ -17,7 +17,7 @@
                 "vadimcn.vscode-lldb",
                 "tamasfe.even-better-toml",
                 "serayuzgur.crates",
-                "ms-vscode.cpptools-extension-pack"
+                "dtsvet.vscode-wasm"
             ]
         }
     }
