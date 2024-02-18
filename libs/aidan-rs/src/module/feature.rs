@@ -17,13 +17,13 @@ pub enum Feature {
     ExtendedConst,
     Strings,
     MultiMemory,
-    All
+    All,
 }
 
 impl Feature {
     pub(crate) fn return_feature(&self) -> binaryen_capi_sys::BinaryenFeatures {
-        use Feature::*;
         use binaryen_capi_sys::*;
+        use Feature::*;
         unsafe {
             match self {
                 MVP => BinaryenFeatureMVP(),

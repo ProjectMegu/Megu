@@ -3,7 +3,7 @@ use binaryen_capi_sys as bapi;
 mod feature;
 
 pub struct Module {
-    ref_: bapi::BinaryenModuleRef
+    ref_: bapi::BinaryenModuleRef,
 }
 
 impl Default for Module {
@@ -21,7 +21,7 @@ impl Drop for Module {
 impl Module {
     pub fn new() -> Module {
         Module {
-            ref_: unsafe { bapi::BinaryenModuleCreate() }
+            ref_: unsafe { bapi::BinaryenModuleCreate() },
         }
     }
 
