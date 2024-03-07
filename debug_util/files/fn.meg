@@ -1,5 +1,7 @@
-use A
-use B
+nspace .Test
+
+use .A
+use .B
 
 fn Main() [
     A()
