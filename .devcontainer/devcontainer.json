@@ -1,8 +1,8 @@
 {
     "name": "Rust Dev",
-    "service": "env",
-    "dockerComposeFile": "../docker-compose.yml",
-    "workspaceFolder": "/workspace",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
     "customizations": {
         "vscode": {
             "settings": {
