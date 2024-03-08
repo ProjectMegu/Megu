@@ -4,6 +4,7 @@ pub struct HirItem {
     pub place: Vec<String>, // "__ROOT__/Main.meg"
     // pub attrs : Vec<HirAttr>,
     pub item_type: HirItemType,
+    pub item_name: String,
 }
 
 #[derive(Debug, Clone, PartialEq)]

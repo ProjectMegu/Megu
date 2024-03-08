@@ -11,6 +11,11 @@ pub fn pass_nspace(mut ctx: HirCtx) -> HirCtx {
         change_item_nspace(module);
     }
 
+    // itemをUseに変換
+    for module in &mut ctx.mods {
+        into_use(module);
+    }
+
     ctx
 }
 
@@ -51,7 +56,24 @@ fn change_item_nspace(module: &mut HirMod) {
 /// ->
 /// use self.Example
 /// ```
-fn into_use(module: &mut HirMod) {}
+fn into_use(module: &mut HirMod) {
+    // file内のitemをRefersに直す
+    for (nspace, item) in &module.items {
+        module
+            .file_item
+            .get_mut(&item.place)
+            .unwrap()
+            .refers
+            .push((nspace.clone(), item.item_name.clone()));
+    }
+    // useをReferに変換
+    for item in module.file_item.values_mut() {
+        for use_item in &item.use_ {
+            item.refers
+                .push((use_item.name.clone(), use_item.name.last().unwrap().clone()));
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {

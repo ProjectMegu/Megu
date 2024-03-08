@@ -235,7 +235,7 @@ peg::parser! {
 
         /// call func
         pub(super) rule p_call_func() -> AstCallFunc =
-            name:ref_dot() n() t_lparen() n() args:(p_expr() ** (n() t_comma() n())) n() t_rparen() {
+            name:t_ident() n() t_lparen() n() args:(p_expr() ** (n() t_comma() n())) n() t_rparen() {
                 AstCallFunc {
                     name,
                     args,
@@ -377,7 +377,6 @@ mod tests {
             // Input string representing function inner statements
             let input = r#"[
                 call_func(call_func())
-                test.call_func(call_func())
             ]"#;
 
             // Tokenize the input string
@@ -387,22 +386,15 @@ mod tests {
             let result = megu_parser::p_func_inner(&tokens);
 
             // Expected AST representation of the function inner statements
-            let expect = vec![
-                ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::AstCallFunc {
-                    name: vec!["call_func".to_string()],
+            let expect = vec![ast::AstStmt::Expr(ast::AstExpr::CallFunc(
+                ast::AstCallFunc {
+                    name: "call_func".to_string(),
                     args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
-                        name: vec!["call_func".to_string()],
+                        name: "call_func".to_string(),
                         args: vec![],
                     })],
-                })),
-                ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::AstCallFunc {
-                    name: vec!["test".to_string(), "call_func".to_string()],
-                    args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
-                        name: vec!["call_func".to_string()],
-                        args: vec![],
-                    })],
-                })),
-            ];
+                },
+            ))];
 
             // Assert that the result matches the expected AST
             assert_eq!(result, Ok(expect));
@@ -545,9 +537,9 @@ mod tests {
 
             // Expected AST representation of the statement
             let expect = ast::AstStmt::Expr(ast::AstExpr::CallFunc(ast::AstCallFunc {
-                name: vec!["call_func".to_string()],
+                name: "call_func".to_string(),
                 args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
-                    name: vec!["call_func".to_string()],
+                    name: "call_func".to_string(),
                     args: vec![],
                 })],
             }));
@@ -576,9 +568,9 @@ mod tests {
                     refs: vec!["Type1".to_string(), "Ref".to_string()],
                 },
                 value: ast::AstExpr::CallFunc(ast::AstCallFunc {
-                    name: vec!["call_func".to_string()],
+                    name: "call_func".to_string(),
                     args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
-                        name: vec!["call_func".to_string()],
+                        name: "call_func".to_string(),
                         args: vec![],
                     })],
                 }),
@@ -608,9 +600,9 @@ mod tests {
                     refs: vec!["Type1".to_string(), "Ref".to_string()],
                 },
                 value: ast::AstExpr::CallFunc(ast::AstCallFunc {
-                    name: vec!["call_func".to_string()],
+                    name: "call_func".to_string(),
                     args: vec![ast::AstExpr::CallFunc(ast::AstCallFunc {
-                        name: vec!["call_func".to_string()],
+                        name: "call_func".to_string(),
                         args: vec![],
                     })],
                 }),

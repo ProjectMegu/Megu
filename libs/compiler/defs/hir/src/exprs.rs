@@ -12,6 +12,6 @@ pub enum HirExpr {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct HirCallFunc {
-    pub name: Vec<String>,
+    pub name: String,
     pub args: Vec<HirExpr>,
 }

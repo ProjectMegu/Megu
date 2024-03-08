@@ -17,9 +17,10 @@ pub(crate) fn into_defs(
                     HirItem {
                         place,
                         item_type: HirItemType::Fn(hir::HirFn {
-                            name: func.name,
+                            name: func.name.clone(),
                             body: func.inner.into_iter().map(into_stmt).collect(),
                         }),
+                        item_name: func.name,
                     },
                 );
             }

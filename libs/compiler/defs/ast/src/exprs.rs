@@ -8,6 +8,6 @@ pub enum AstExpr {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstCallFunc {
-    pub name: Vec<String>,
+    pub name: String,
     pub args: Vec<AstExpr>,
 }
