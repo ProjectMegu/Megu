@@ -14,12 +14,12 @@ pub(crate) fn into_file_item(
             AstDef::LineNSpace(nspace) => {
                 if file_map.get(&place).is_some() {
                     let data: &mut HirFileItem = file_map.get_mut(&place).unwrap();
-                    
+
                     if !data.line_nspace.name.is_empty() {
                         // TODO: error handling
                         panic!("line namespace is only one at one file.")
                     }
-                    
+
                     data.line_nspace = HirNameSpaceTree {
                         name: nspace.tree.name,
                         relative: nspace.tree.relative,
@@ -40,9 +40,8 @@ pub(crate) fn into_file_item(
             AstDef::Use(use_) => {
                 if file_map.get(&place).is_some() {
                     let data: &mut HirFileItem = file_map.get_mut(&place).unwrap();
-                    data.use_.extend(use_
-                        .into_iter()
-                        .map(|ns| HirNameSpaceTree {
+                    data.use_
+                        .extend(use_.into_iter().map(|ns| HirNameSpaceTree {
                             name: ns.name,
                             relative: ns.relative,
                         }));

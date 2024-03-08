@@ -10,6 +10,6 @@ edition = "2021"
 ast = { path = "../../defs/ast" }
 
 # external dependencies
-peg = {version = "0"}
-logos = "0.13.0"
+peg = {version = "0"} 
+logos = "0.14.0"
 anyhow.workspace = true

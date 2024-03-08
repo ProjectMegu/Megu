@@ -74,7 +74,7 @@ peg::parser! {
         rule t_equal() -> () = [MeguToken::Equal] {}
 
         // must newline
-        rule mn() -> () = [MeguToken::NewLine] {}
+        rule mn() -> () = [MeguToken::NewLine]+ {}
 
         // parse rules
 
@@ -143,10 +143,10 @@ peg::parser! {
         // namespaces
         /// namespace tree
         pub(super) rule p_namespace_tree() -> AstNameSpaceTree =
-            relative: t_dot()? n() name:(t_ident() ** (n() t_dot() n())) {
+            n() name:(t_ident() ** (n() t_dot() n())) {
                 AstNameSpaceTree {
                     name,
-                    relative: relative.is_some(),
+                    relative: false,
                 }
             }
 
@@ -173,13 +173,13 @@ peg::parser! {
         // use
         /// use
         pub(super) rule p_use() -> AstUse =
-            t_use() n() relative: t_dot()? n() tree:p_use_tree() {
+            t_use() n() n() tree:p_use_tree() {
                 let mut list = Vec::new();
                 let a = tree.into_use();
                 for i in a {
                     list.push(AstNameSpaceTree {
                         name: i,
-                        relative: relative.is_some(),
+                        relative: false,
                     })
                 }
                 list
@@ -418,7 +418,7 @@ mod tests {
         #[test]
         fn p_line_namespace_test() {
             // Input string representing a line namespace
-            let input = r#"nspace .test"#;
+            let input = r#"nspace test"#;
 
             // Tokenize the input string
             let tokens = tokens::lexer(input);
@@ -431,7 +431,7 @@ mod tests {
                 attr: None,
                 tree: ast::AstNameSpaceTree {
                     name: vec!["test".to_string()],
-                    relative: true,
+                    relative: false,
                 },
             };
 
@@ -443,7 +443,7 @@ mod tests {
         #[test]
         fn p_block_namespace_test() {
             // Input string representing a block namespace
-            let input = r#"nspace .test [
+            let input = r#"nspace test [
                 fn test() []
             ]"#;
 
@@ -458,7 +458,7 @@ mod tests {
                 attr: None,
                 tree: ast::AstNameSpaceTree {
                     name: vec!["test".to_string()],
-                    relative: true,
+                    relative: false,
                 },
                 inner: vec![ast::AstDef::Func(ast::AstDefFunc {
                     attr: None,
@@ -481,7 +481,7 @@ mod tests {
         #[test]
         fn p_use_test() {
             // Input string representing a use statement
-            let input = r#"use .test"#;
+            let input = r#"use test"#;
 
             // Tokenize the input string
             let tokens = tokens::lexer(input);
@@ -492,7 +492,7 @@ mod tests {
             // Expected AST representation of the use statement
             let expect = vec![ast::AstNameSpaceTree {
                 name: vec!["test".to_string()],
-                relative: true,
+                relative: false,
             }];
 
             // Assert that the result matches the expected AST
@@ -503,14 +503,14 @@ mod tests {
         #[test]
         fn p_use_list_test() {
             // Input string representing a use statement with a list
-            let input = r#"use .test.[
+            let input = r#"use test.[
                 test1,
                 test2,
                 test3,
             ]"#;
 
             // Tokenize the input string
-            let tokens = dbg!(tokens::lexer(input));
+            let tokens = tokens::lexer(input);
 
             // Parse the use statement and get the result
             let result = megu_parser::p_use(&tokens);
@@ -519,15 +519,15 @@ mod tests {
             let expect = vec![
                 ast::AstNameSpaceTree {
                     name: vec!["test".to_string(), "test1".to_string()],
-                    relative: true,
+                    relative: false,
                 },
                 ast::AstNameSpaceTree {
                     name: vec!["test".to_string(), "test2".to_string()],
-                    relative: true,
+                    relative: false,
                 },
                 ast::AstNameSpaceTree {
                     name: vec!["test".to_string(), "test3".to_string()],
-                    relative: true,
+                    relative: false,
                 },
             ];
 

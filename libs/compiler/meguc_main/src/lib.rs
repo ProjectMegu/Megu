@@ -23,7 +23,10 @@ pub fn convert_ast_ctx(ctx: CodeContext) -> anyhow::Result<AstContext> {
         })
         .collect();
     let mods = bind_result(mods.into_iter())?;
-    Ok(AstContext { modules: mods, deps: ctx.deps})
+    Ok(AstContext {
+        modules: mods,
+        deps: ctx.deps,
+    })
 }
 
 pub fn convert_ast(dir: CodeDir) -> anyhow::Result<AstDir> {

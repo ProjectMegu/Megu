@@ -1,8 +1,7 @@
-nspace .Test
+nspace self.Test
 
-use .A
-use .B
+use Sys.IO.[ReadFile,WriteFile]
 
 fn Main() [
-    A()
+    
 ]

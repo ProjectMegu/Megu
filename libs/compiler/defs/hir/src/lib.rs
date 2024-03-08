@@ -5,7 +5,7 @@ use utils::SccMap;
 #[derive(Debug, Clone, Default)]
 pub struct HirCtx {
     pub mods: Vec<HirMod>,
-    pub deps: SccMap<String>
+    pub deps: SccMap<String>,
 }
 
 type NameSpace = Vec<String>;
@@ -15,13 +15,13 @@ type FilePlace = Vec<String>;
 pub struct HirMod {
     pub name: String,
     pub items: HashMap<NameSpace, HirItem>,
-    pub file_item: HashMap<FilePlace, HirFileItem>
+    pub file_item: HashMap<FilePlace, HirFileItem>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct HirFileItem {
     pub line_nspace: HirNameSpaceTree,
-    pub use_: Vec<HirNameSpaceTree>
+    pub use_: Vec<HirNameSpaceTree>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -46,7 +46,7 @@ pub enum HirItemType {
 pub struct HirFn {
     // pub params: Vec<HirFnParam>,
     pub body: Vec<HirStmt>,
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Debug, Clone, PartialEq)]
