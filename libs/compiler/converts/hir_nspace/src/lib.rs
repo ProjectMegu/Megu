@@ -51,9 +51,7 @@ fn change_item_nspace(module: &mut HirMod) {
 /// ->
 /// use self.Example
 /// ```
-fn into_use(module: &mut HirMod) {
-
-}
+fn into_use(module: &mut HirMod) {}
 
 #[cfg(test)]
 mod tests {
