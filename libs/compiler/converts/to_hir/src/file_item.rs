@@ -31,6 +31,7 @@ pub(crate) fn into_file_item(
                                 name: nspace.tree.name,
                             },
                             use_: Vec::new(),
+                            refers: Default::default(),
                         },
                     );
                 }
@@ -51,6 +52,7 @@ pub(crate) fn into_file_item(
                                 .into_iter()
                                 .map(|ns| HirNameSpaceTree { name: ns.name })
                                 .collect(),
+                            refers: Default::default(),
                         },
                     );
                 }

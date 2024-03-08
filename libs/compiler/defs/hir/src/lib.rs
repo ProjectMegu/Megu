@@ -1,3 +1,6 @@
+pub mod internals;
+pub use crate::internals::*;
+
 use std::collections::HashMap;
 
 use utils::SccMap;
@@ -22,6 +25,7 @@ pub struct HirMod {
 pub struct HirFileItem {
     pub line_nspace: HirNameSpaceTree,
     pub use_: Vec<HirNameSpaceTree>,
+    pub refers: HirRefers,
 }
 
 #[derive(Debug, Clone, PartialEq)]

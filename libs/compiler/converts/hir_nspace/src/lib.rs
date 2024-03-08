@@ -45,15 +45,15 @@ fn change_item_nspace(module: &mut HirMod) {
     }
 }
 
-// itemの宣言をUseに変換する
-// ```megu
-// fn Example() []
-// ->
-// use self.Example
-// ```
-// fn into_use(mut ctx: HirCtx) -> HirCtx {
+/// itemの宣言をUseに変換する
+/// ```megu
+/// fn Example() []
+/// ->
+/// use self.Example
+/// ```
+fn into_use(module: &mut HirMod) {
 
-// }
+}
 
 #[cfg(test)]
 mod tests {
@@ -73,6 +73,7 @@ mod tests {
                 use_: vec![HirNameSpaceTree {
                     name: vec!["self".to_string(), "Func".to_string()],
                 }],
+                refers: Default::default(),
             },
         );
 
@@ -92,6 +93,7 @@ mod tests {
                 use_: vec![HirNameSpaceTree {
                     name: vec!["Test".to_string(), "Func".to_string()],
                 }],
+                refers: Default::default(),
             },
         );
 
