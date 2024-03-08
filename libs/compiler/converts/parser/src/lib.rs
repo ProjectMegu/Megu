@@ -3,7 +3,6 @@ mod tokens;
 
 pub fn parse(code: &str) -> anyhow::Result<Vec<ast::AstDef>> {
     let tokens = tokens::lexer(code);
-    dbg!(&tokens);
     let parse = parsers::megu_parse(&tokens);
 
     match parse {

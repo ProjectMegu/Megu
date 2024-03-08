@@ -27,7 +27,6 @@ pub struct HirFileItem {
 #[derive(Debug, Clone, PartialEq)]
 pub struct HirNameSpaceTree {
     pub name: Vec<String>,
-    pub relative: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]

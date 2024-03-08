@@ -22,7 +22,6 @@ pub(crate) fn into_file_item(
 
                     data.line_nspace = HirNameSpaceTree {
                         name: nspace.tree.name,
-                        relative: nspace.tree.relative,
                     };
                 } else {
                     file_map.insert(
@@ -30,7 +29,6 @@ pub(crate) fn into_file_item(
                         HirFileItem {
                             line_nspace: HirNameSpaceTree {
                                 name: nspace.tree.name,
-                                relative: nspace.tree.relative,
                             },
                             use_: Vec::new(),
                         },
@@ -40,25 +38,18 @@ pub(crate) fn into_file_item(
             AstDef::Use(use_) => {
                 if file_map.get(&place).is_some() {
                     let data: &mut HirFileItem = file_map.get_mut(&place).unwrap();
-                    data.use_
-                        .extend(use_.into_iter().map(|ns| HirNameSpaceTree {
-                            name: ns.name,
-                            relative: ns.relative,
-                        }));
+                    data.use_.extend(
+                        use_.into_iter()
+                            .map(|ns| HirNameSpaceTree { name: ns.name }),
+                    );
                 } else {
                     file_map.insert(
                         place,
                         HirFileItem {
-                            line_nspace: HirNameSpaceTree {
-                                name: Vec::new(),
-                                relative: false,
-                            },
+                            line_nspace: HirNameSpaceTree { name: Vec::new() },
                             use_: use_
                                 .into_iter()
-                                .map(|ns| HirNameSpaceTree {
-                                    name: ns.name,
-                                    relative: ns.relative,
-                                })
+                                .map(|ns| HirNameSpaceTree { name: ns.name })
                                 .collect(),
                         },
                     );

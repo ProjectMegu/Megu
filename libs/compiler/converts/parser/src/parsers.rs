@@ -146,7 +146,6 @@ peg::parser! {
             n() name:(t_ident() ** (n() t_dot() n())) {
                 AstNameSpaceTree {
                     name,
-                    relative: false,
                 }
             }
 
@@ -179,7 +178,6 @@ peg::parser! {
                 for i in a {
                     list.push(AstNameSpaceTree {
                         name: i,
-                        relative: false,
                     })
                 }
                 list
@@ -431,7 +429,6 @@ mod tests {
                 attr: None,
                 tree: ast::AstNameSpaceTree {
                     name: vec!["test".to_string()],
-                    relative: false,
                 },
             };
 
@@ -458,7 +455,6 @@ mod tests {
                 attr: None,
                 tree: ast::AstNameSpaceTree {
                     name: vec!["test".to_string()],
-                    relative: false,
                 },
                 inner: vec![ast::AstDef::Func(ast::AstDefFunc {
                     attr: None,
@@ -492,7 +488,6 @@ mod tests {
             // Expected AST representation of the use statement
             let expect = vec![ast::AstNameSpaceTree {
                 name: vec!["test".to_string()],
-                relative: false,
             }];
 
             // Assert that the result matches the expected AST
@@ -519,15 +514,12 @@ mod tests {
             let expect = vec![
                 ast::AstNameSpaceTree {
                     name: vec!["test".to_string(), "test1".to_string()],
-                    relative: false,
                 },
                 ast::AstNameSpaceTree {
                     name: vec!["test".to_string(), "test2".to_string()],
-                    relative: false,
                 },
                 ast::AstNameSpaceTree {
                     name: vec!["test".to_string(), "test3".to_string()],
-                    relative: false,
                 },
             ];
 

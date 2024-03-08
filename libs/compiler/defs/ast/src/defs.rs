@@ -38,7 +38,6 @@ pub struct AstDefFuncArg {
 #[derive(Debug, Clone, PartialEq)]
 pub struct AstNameSpaceTree {
     pub name: Vec<String>,
-    pub relative: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]
