@@ -4,6 +4,7 @@ pub enum TypeKind {
     I64,
     F32,
     F64,
+    None,
     Tuple(Vec<TypeKind>),
 }
 
@@ -27,6 +28,9 @@ impl Type {
             },
             TypeKind::F64 => unsafe {
                 binaryen_capi_sys::BinaryenTypeFloat64()
+            },
+            TypeKind::None => unsafe {
+                binaryen_capi_sys::BinaryenTypeNone()
             },
             TypeKind::Tuple(types) => {
                 let mut type_refs = Vec::new();
