@@ -84,9 +84,8 @@ checksum = "3a8241f3ebb85c056b509d4327ad0358fbbba6ffb340bf388f26350aeda225b1"
 
 [[package]]
 name = "binaryen_capi-sys"
-version = "0.116.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b72bc7967ad99aee84da5ed43cc3c0c7288b3fc38f94e7cc7502e8b07165732e"
+version = "0.117.0"
+source = "git+https://github.com/ProjectMegu/binaryen-sys.git#451f546c0ac66f46955d151957ee7f24c5190f6b"
 dependencies = [
  "bindgen",
 ]

@@ -1,6 +1,6 @@
 use binaryen_capi_sys as bapi;
 
-mod feature;
+pub mod feature;
 
 pub struct Module {
     pub(crate) ref_: bapi::BinaryenModuleRef,
